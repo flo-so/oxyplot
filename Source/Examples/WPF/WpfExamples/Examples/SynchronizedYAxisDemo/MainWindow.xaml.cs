@@ -32,7 +32,7 @@ namespace SynchronizedYAxisDemo
       InitializeComponent();
       DataContext = this;
             
-      Model.Axes.Add(new LinearAxis
+      this.Model.Axes.Add(new LinearAxis
       {
         Key = "y_left",
         Position = AxisPosition.Left,
@@ -42,7 +42,7 @@ namespace SynchronizedYAxisDemo
         MajorGridlineStyle = LineStyle.Dot
       });
 
-      Model.Axes.Add(new LinearAxis
+      this.Model.Axes.Add(new LinearAxis
       {
         Key = "y_right",
         Position = AxisPosition.Right,
@@ -51,7 +51,7 @@ namespace SynchronizedYAxisDemo
         TextColor = OxyColor.FromRgb(0x00, 0x00, 0xFF)
       });
 
-      foreach (Axis axis in Model.Axes)
+      foreach (Axis axis in this.Model.Axes)
         axis.AxisChanged += OnYAxisChanged;
 
       var seriesLeft = new LineSeries 
@@ -71,30 +71,30 @@ namespace SynchronizedYAxisDemo
         seriesRight.Points.Add(new DataPoint(i, 2 * i));
       }
 
-      Model.Series.Add(seriesLeft);
-      Model.Series.Add(seriesRight);      
+      this.Model.Series.Add(seriesLeft);
+      this.Model.Series.Add(seriesRight);      
     }
 
     private void OnYAxisChanged(object? sender, EventArgs e)
     {
-      if (_axisIsInternalchange || sender is null || sender is not Axis)
+      if (this._axisIsInternalchange || sender is null || sender is not Axis)
         return;
 
-      _axisIsInternalchange = true;
+      this._axisIsInternalchange = true;
       Axis axis = (Axis)sender;
 
       if (axis.Position == AxisPosition.Bottom || axis.Position == AxisPosition.Top)  // you should not add this event to an x-axis, but well...
         return;
 
-      for (int i = 0; i < Model.Axes.Count; i++)
+      for (int i = 0; i < this.Model.Axes.Count; i++)
       {
-        if (axis.Key == Model.Axes[i].Key)
+        if (axis.Key == this.Model.Axes[i].Key)
         {
-          for (int j = 0; j < Model.Axes.Count; j++)
+          for (int j = 0; j < this.Model.Axes.Count; j++)
           {
-            if ((i != j) && (Model.Axes[j].Position == AxisPosition.Left || Model.Axes[j].Position == AxisPosition.Right))
+            if ((i != j) && (this.Model.Axes[j].Position == AxisPosition.Left || this.Model.Axes[j].Position == AxisPosition.Right))
             {
-              Model.Axes[j].Zoom((axis.ActualMinimum - Model.Axes[i].Minimum) * Model.Axes[j].MajorStep / Model.Axes[i].MajorStep + Model.Axes[j].Minimum, (axis.ActualMaximum - Model.Axes[i].Minimum) * Model.Axes[j].MajorStep / Model.Axes[i].MajorStep + Model.Axes[j].Minimum);
+              this.Model.Axes[j].Zoom((axis.ActualMinimum - this.Model.Axes[i].Minimum) * this.Model.Axes[j].MajorStep / this.Model.Axes[i].MajorStep + this.Model.Axes[j].Minimum, (axis.ActualMaximum - this.Model.Axes[i].Minimum) * this.Model.Axes[j].MajorStep / this.Model.Axes[i].MajorStep + this.Model.Axes[j].Minimum);
             }
 
           }
@@ -102,7 +102,7 @@ namespace SynchronizedYAxisDemo
         }
       }
 
-      _axisIsInternalchange = false;
+      this._axisIsInternalchange = false;
     }
   }
 }
